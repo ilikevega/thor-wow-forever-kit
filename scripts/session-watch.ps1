@@ -71,6 +71,8 @@ function GuardDesktopSunshine {
     if (-not (Get-Service $cfg.ServiceName -ErrorAction SilentlyContinue)) { return }
     try {
         Move-Item $exe "$exe.disabled" -Force -ErrorAction Stop
+        # Desktop not running yet: nothing started from that copy and the port has not moved, so the rename is enough
+        if (-not (Get-Process DsForeverDesktop -ErrorAction SilentlyContinue)) { Say "guard: Desktop's own sunshine.exe was back; disabled it"; return }
         Get-CimInstance Win32_Process -Filter "Name='sunshine.exe'" | Where-Object { $_.ExecutablePath -eq $exe } |
             ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
         Start-Sleep 2
@@ -91,6 +93,7 @@ while ($true) {
         if ($inSession) { $inSession = $false; $monitorDueAt = $null; SessionEnd }
         $pending = $null
         if (-not $waiting) { Say "Desktop not running; waiting for it"; $waiting = $true }
+        GuardDesktopSunshine
         Start-Sleep 8; continue
     }
     if ($waiting) {

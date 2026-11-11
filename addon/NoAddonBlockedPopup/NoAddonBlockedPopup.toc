@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: No "AddOn blocked" popup
+## Notes: Stops the "has been blocked from an action only available to the Blizzard UI" dialog that DS Forever trips constantly. The actions stay blocked; only the dialog goes.
+## Author: thor-wow-forever-kit
+## Version: 1.0
+## DefaultState: enabled
+NoAddonBlockedPopup.lua

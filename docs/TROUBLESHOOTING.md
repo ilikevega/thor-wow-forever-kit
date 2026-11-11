@@ -118,6 +118,34 @@ and Apollo crashes on start (ClassicOldSong/Apollo issue 835). Update Apollo if 
 delete `sunshine_state.json` in Apollo's config folder and pair the clients again. A second cause seen once: the
 `credentials` folder in Apollo's config folder had lost SYSTEM's access rights.
 
+## Sign-in shows a captcha, then "disconnected" (BLZ51914400)
+
+This is Blizzard's sign-in protection, not a fault in your setup. It has been reported on DS Forever 1.0.15, 1.0.17 and
+1.0.24, and by PC players who start WoW from its exe instead of the Battle.net app. A captcha that is solved and still
+ends in "disconnected" will not clear by trying again.
+
+**Stop retrying.** Every failed attempt keeps the protection up. Leave it alone for at least 15 minutes.
+
+Then work down this list, one sign-in attempt per step:
+
+1. **Check the account from the PC.** Open the Battle.net app, press Play on WoW Forever and get to the character
+   screen. If that fails too, the problem is the account or Blizzard's servers, and nothing on the Thor will help.
+2. **Check the region.** In DS Forever's start-up **Menu > Region**, pick the region your account plays in (US, EU,
+   Korea, Taiwan). The Battle.net app has the same choice on its sign-in screen. One player had this exact captcha
+   loop with the app on Americas and the account on Europe, and it ended when the two matched.
+3. **Forget the login and enter it fresh.** In DS Forever's Menu choose to forget the login, close the app, open it
+   and type the login again. Editing the saved login is not the same. This cleared it for the player in DS Forever
+   issue 21, who then got the normal authenticator prompt.
+4. **Turn off any VPN** on the Thor and the PC for the sign-in, Tailscale exit nodes included.
+5. **Have the authenticator ready.** If the account uses the Battle.net Authenticator, approve the prompt on the phone
+   straight away.
+
+**Play tonight anyway.** Artemis does not use the saved login. Open Artemis on the Thor, pick the PC, start WoW Forever
+from the Battle.net app on the stream and play on the top screen. You lose the bottom-screen companion until the
+DS Forever sign-in works again.
+
+If none of it helps, send a report from DS Forever's Menu and wait for the next release.
+
 ## DS Forever on the Thor
 
 - **The game download crawls.** Copy the game data from the PC over USB instead (Phase 3 of SKILL.md).

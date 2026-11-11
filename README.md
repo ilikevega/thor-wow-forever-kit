@@ -1,97 +1,141 @@
-# Thor WoW Forever kit
+# WoW Forever on your Thor, from the couch
 
-A Claude Code skill that sets up an AYN Thor and a Windows gaming PC for playing WoW Forever from the couch, the way
-Moonlight feels: the PC stays locked with its monitors off, you start from the Thor, and when you stop, the PC closes
-the game and locks itself again.
+You pick up the Thor, tap one thing, and you are in Azeroth. Your PC does the heavy lifting in the other room with its
+monitors off. When you put the Thor down, the PC closes the game and locks itself.
 
-You sit with it for about an hour. Claude Code drives; you click the things only you should click.
+This kit gets you there. You do not have to understand any of it. Claude Code does the setup on your PC, and you sit
+next to it and click when it asks.
 
-## What you end up with
+**Set aside about an hour.** Most of it is waiting on downloads, so have a drink nearby.
 
-- **WoW Forever on the Thor's top screen, the companion on the bottom screen**, through
-  [DS Forever](https://github.com/Jreese702/DS-Forever), streamed from your PC.
-- **The whole PC desktop or any other game on the Thor**, through
-  [Apollo](https://github.com/ClassicOldSong/Apollo) on the PC and
-  [Artemis](https://github.com/ClassicOldSong/moonlight-android) on the Thor.
-- **A routine around a WoW session**, each part optional:
-  - the PC's sound plays only on the Thor
-  - the PC's monitors go dark while you play
-  - WoW closes on the PC when you leave the stream
-  - the PC can be locked the whole time: you sign in from the Thor, and it locks again when you stop
+---
 
-How a session goes, start to finish: [docs/COUCH-ROUTINE.md](docs/COUCH-ROUTINE.md).
+## What it feels like when it's done
 
-## What you need
+| You do this | This happens |
+|---|---|
+| Open **DS Forever** on the Thor and tap **Streaming** | Your PC wakes the game up. If the PC is locked, you see its lock screen on the Thor. |
+| Type your Windows PIN on the Thor | WoW appears on the top screen. Map, bags and chat sit on the bottom screen. |
+| Play | Sound comes out of the Thor. The PC's monitors go dark and its speakers stay quiet. |
+| Log out and put the Thor down | About half a minute later the PC closes WoW, turns its monitors back on and locks. |
 
-- A Windows 11 PC with an NVIDIA card (AMD and Intel may work; nobody has tried them with this kit)
-- WoW Forever installed through the Battle.net app, and your Battle.net login
-- Steam installed (it supplies the silent audio device used to mute the PC)
-- An AYN Thor on the same home network, about 60 GB free on it, and a USB-C cable
-- Claude Code on the PC
-- A Windows PIN or password you can type on the Thor
+You also get **Artemis**, a second app on the Thor that shows your whole PC. Use it for any other game, or to poke at
+your desktop from the sofa.
 
-## Install and run
+The full play-by-play, including how to quit cleanly, is in [the couch routine](docs/COUCH-ROUTINE.md). It is one page.
 
-In PowerShell:
+---
+
+## Before you start, have these ready
+
+- [ ] **WoW Forever installed on the PC** through the Battle.net app
+- [ ] **Your Battle.net login** (you will type it on the Thor once)
+- [ ] **Steam installed on the PC** (the kit borrows a silent speaker from it to keep the PC quiet)
+- [ ] **Your Thor**, charged, on your home Wi-Fi, with about **60 GB free**
+- [ ] **A USB-C cable** from the Thor to the PC
+- [ ] **A Windows PIN or password you can type.** Fingerprint and face unlock do not work through a stream.
+- [ ] **Claude Code** on the PC
+
+A Windows 11 PC with an NVIDIA graphics card is what this was built on. AMD and Intel cards might work. Nobody has
+tried yet.
+
+---
+
+## Three steps to get going
+
+**1. Open PowerShell and paste this.** It downloads the kit into the place Claude Code looks for skills.
 
 ```
 git clone https://github.com/ilikevega/thor-wow-forever-kit "$env:USERPROFILE\.claude\skills\thor-wow-kit"
 ```
 
-Then start Claude Code and type:
+**2. Start Claude Code and type:**
 
 ```
 /thor-wow-kit
 ```
 
-If the command is not offered, restart Claude Code once, or say "set up my Thor with the thor-wow-kit skill".
+**3. Follow along.** Claude tells you what it is doing, checks that each piece works before moving on, and stops to ask
+whenever it needs your hands.
 
-## What it will ask you to do yourself
+> If `/thor-wow-kit` does not show up, close Claude Code and open it again. Or just say:
+> *"Set up my Thor with the thor-wow-kit skill."*
 
-- Type every PIN, pairing code and password. Claude never types or sees them.
-- Approve Windows administrator prompts, and paste two or three commands into an administrator PowerShell
-  (a Windows service, a firewall rule). Claude Code is not allowed to do those for you, and should not be.
-- Install the apps on the Thor and accept its prompts.
-- Watch your monitors during a ten-second test and say what they did.
+---
 
-## What it changes on the PC
+## What Claude will ask you to do
 
-Nothing is hidden, and the larger steps can be undone.
+Some things are yours to do, on purpose. Claude will tell you exactly what to click or paste each time.
 
-| Change | Undo |
+- **Type every PIN, code and password yourself.** Claude never types them and never sees them.
+- **Say yes to the Windows "allow this app to make changes" prompts**, and paste two or three commands into an
+  administrator PowerShell. Claude Code is not allowed to do those for you, and that is a good thing.
+- **Tap through the prompts on the Thor** and install the two apps on it.
+- **Watch your monitors for ten seconds** and say whether they went dark and came back. Not every monitor can do this
+  trick. If yours cannot, that one feature gets skipped and everything else still works.
+
+---
+
+## Will this mess up my PC?
+
+No, and nothing is hidden. Here is every change it makes and how to take it back.
+
+| What it adds | How to remove it |
 |---|---|
-| Installs Apollo and DS Forever Desktop | Uninstall them normally |
-| A small background watcher that starts with Windows | `scripts\enable-autostart.ps1 -Remove` |
-| Settings in `%LOCALAPPDATA%\ThorWowKit\config.json` | Delete the folder |
-| A Windows service that runs DS Forever's own Sunshine, so the lock screen can be streamed; a firewall rule for it on Private networks | `scripts\uninstall-sunshine-service.ps1` |
-| A two-line WoW add-on that hides one recurring dialog | `scripts\install-addon.ps1 -Remove` |
+| Two apps: Apollo and DS Forever Desktop | Uninstall them like any other app |
+| A tiny background helper that starts with Windows. It is the thing that closes WoW and locks the PC when you stop. | `scripts\enable-autostart.ps1 -Remove` |
+| A small settings file in `%LOCALAPPDATA%\ThorWowKit` | Delete the folder |
+| A Windows service, so your Thor can show the lock screen and let you sign in. It comes with a firewall rule for your home network only. | `scripts\uninstall-sunshine-service.ps1` |
+| A two-line WoW add-on that hides one nagging popup | `scripts\install-addon.ps1 -Remove` |
 
-The service step is the one to understand before you agree to it. The comment at the top of
-`scripts\install-sunshine-service.ps1` says exactly what it does, and the troubleshooting page has a short note on what
-it means for a shared PC.
+The Windows service is the only big one. Claude will read you what it does before you run it, and you can say no.
+Without it everything still works, except that the PC has to be unlocked before you start playing.
 
-## When something stops working
+---
+
+## It was working and now it isn't
+
+This will happen at some point. DS Forever updates itself often, and an update is nearly always the cause.
+
+**Easiest:** open Claude Code and say *"verify my Thor setup."*
+
+**Or run the checker yourself:**
 
 ```
 powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\skills\thor-wow-kit\scripts\verify.ps1"
 ```
 
-It prints PASS, FAIL or SKIP for each part and what to do about a FAIL. A DS Forever Desktop update is the usual cause.
-Then [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md), or ask Claude Code to "verify my Thor setup".
+It prints PASS, FAIL or SKIP for each piece, and next to every FAIL it says what to do.
 
-To get help from whoever gave you this kit, run `scripts\collect-logs.ps1`, look through the zip it puts on your
-Desktop, and send it.
+Still stuck? The [troubleshooting page](docs/TROUBLESHOOTING.md) lists every problem we hit building this, with the fix.
 
-Update the kit with `git pull` in its folder.
+**Want me to look at it?** Run `scripts\collect-logs.ps1`. It puts a zip on your Desktop with your name, your PC's
+name, your passwords and your keys left out. Have a look inside, then send it over.
 
-## Status
+To get the latest fixes, run `git pull` inside the kit folder.
 
-This was built from one working setup and has not yet been run start to finish on a second PC. If you are reading this
-early, you are the test. The monitor, audio and service parts depend on your hardware, which is why each can be left off. Versions it was made with: DS Forever 1.0.16, DS Forever Desktop 0.2.13 to
-0.2.21, Apollo 0.4.6. Those projects move fast, and their own instructions win where they disagree with this kit.
+---
 
-This kit contains none of their code. It downloads nothing by itself; it points you at each project's own releases.
-DS Forever, Apollo, Artemis, Sunshine, Steam and World of Warcraft belong to their owners. This is an unofficial hobby
-project with no connection to any of them.
+## Fair warning
+
+You are early. This was built from one working setup and has not yet been run start to finish on a second PC, so you
+may be the first. If something goes sideways, it is the kit and not you. Send the zip and it gets fixed for the next
+person.
+
+It was made with DS Forever 1.0.16, DS Forever Desktop 0.2.13 to 0.2.21 and Apollo 0.4.6. Those projects move fast.
+Where their own instructions disagree with this kit, theirs win, and Claude knows to check.
+
+---
+
+## Credit where it's due
+
+The real work is other people's. This kit only ties their projects together.
+
+- [DS Forever](https://github.com/Jreese702/DS-Forever), the two-screen WoW Forever companion and its PC app
+- [Apollo](https://github.com/ClassicOldSong/Apollo), the streaming host on the PC
+- [Artemis](https://github.com/ClassicOldSong/moonlight-android), the streaming app on the Thor
+
+The kit contains none of their code and downloads nothing by itself. It points you at each project's own releases.
+It is an unofficial hobby project with no connection to them, to Valve or to Blizzard.
 
 License: MIT, see [LICENSE](LICENSE).
